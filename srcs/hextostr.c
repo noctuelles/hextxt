@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/22 13:32:20 by plouvel           #+#    #+#             */
-/*   Updated: 2021/09/23 10:45:04 by plouvel          ###   ########.fr       */
+/*   Updated: 2021/09/24 15:48:48 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,30 +65,25 @@ static unsigned char	htoc(const char **pstr)
 	return (c);
 }
 
-char	*hextostr(const char *str)
+char	*hextostr(const char *pstr)
 {
 	char	*conv;
 	size_t	size_conv;
 	size_t	i;
 
-	size_conv = check_str(str);
+	size_conv = check_str(pstr);
 	i = 0;
 	if(!size_conv)
 		return (NULL);
 	conv = (char *) malloc((size_conv + 1) * sizeof(char));
 	if (!conv)
 		return (NULL);
-	while (*str != '\0')
+	while (*pstr != '\0')
 	{
-		if (valid_hex(*str))
-			conv[i++] = htoc(&str);
-		str++;
+		if (valid_hex(*pstr))
+			conv[i++] = htoc(&pstr);
+		pstr++;
 	}
 	conv[i] = '\0';
 	return (conv);
-}
-int main(int argc, char **argv)
-{
-//	char *test = hextostr("0a 0a");
-	printf("%s\n", hextostr(argv[1]));
 }

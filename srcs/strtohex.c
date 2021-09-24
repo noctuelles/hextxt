@@ -6,23 +6,24 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 10:50:30 by plouvel           #+#    #+#             */
-/*   Updated: 2021/09/24 15:24:23 by plouvel          ###   ########.fr       */
+/*   Updated: 2021/09/24 15:44:43 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# define SPACE_EACH -2
-# define NO_SPACE	-3
-# define IN_BLOCK	-4
-
 #include "libft.h"
+#include "hextxt.h"
 #include <stdlib.h>
 
-size_t	check_str(const char *pstr, int mode, unsigned int blk_size)
+static size_t	check_str(const char *pstr, int mode, unsigned int blk_size)
 {
 	size_t	size;
+	size_t	limit;
 
 	size = 0;
-	while (*pstr != '\0')
+	limit = 2147483647;
+	if (blk_size > limit)
+		return (0);
+	while (*pstr != '\0' && limit--)
 	{
 		if (!ft_isascii(*pstr))
 			return (0);
@@ -37,7 +38,7 @@ size_t	check_str(const char *pstr, int mode, unsigned int blk_size)
 	return (size);
 }
 
-char	itoch(unsigned int i)
+static char	itoch(unsigned int i)
 {
 	if (i > 9)
 		return ('a' + (i - 10));
