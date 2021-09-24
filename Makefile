@@ -1,4 +1,4 @@
-SRCS	=
+SRCS	=	srcs/hextostr.c srcs/strtohex.c srcs/hextxt.c
 
 OBJS	=	$(SRCS:.c=.o)
 
