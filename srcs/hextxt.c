@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/22 13:22:05 by plouvel           #+#    #+#             */
-/*   Updated: 2021/09/28 19:24:29 by plouvel          ###   ########.fr       */
+/*   Updated: 2021/09/28 20:19:11 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,49 +16,50 @@
 #include <libgen.h>
 #include <stdio.h>
 
-const char	g_usage[] =
+static const char	g_usage[620] =
 	"hextxt: ASCII string <-> hexadecimal conversion\n"
-	"usage: ./hextxt [-shm] [input]\n"
-	"-s: convert the hexadecimal string into an ASCII string.\n"
-	"-h: convert the ASCII string into an hexadecimal string. If no\n"
-	"	 mode is specified, the default mode will be SPACE_EACH.\n"
-	"-m: output format. To be use when -h option is used.\n\n"
-	"		SPACE_EACH	: 01 0f 0a 0b\n"
-	"		NO_SPACE	: 010f0a0b\n"
-	"		IN_BLOCK	: 010f 0a0b\n\n"
+	"usage: ./hextxt [-sx] [-m] [input]\n"
+	"-s : convert the hexadecimal string into an ASCII string.\n"
+	"-x : convert the ASCII string into an hexadecimal. If no mode\n"
+	"     is specified, the default mode will be SPACE_EACH.\n"
+	"-m : output format. To be use only when -h option is used.\n\n"
+	"	SPACE_EACH	: 01 0f 0a 0b\n"
+	"	NO_SPACE	: 010f0a0b\n"
+	"	IN_BLOCK	: 010f 0a0b (with 2 bytes per block)\n\n"
 	"IN_BLOCK should be followed by the number of byte per block :\n\n"
-	"		./hextxt -h -m IN_BLOCK 2 Hello\n\n"
-	"If only the input is provided, it convert the string to hexa-"
-	"-decimal using NO_SPACE mode.";
+	"	./hextxt -h -m IN_BLOCK 2 Hello\n\n"
+	"	4865 6c6c 6f\n\n"
+	"If only the input is provided, it converts the string to hex-\n"
+	"-adecimal using NO_SPACE mode.\n";
 
-const char	*g_err_table[7] =
+static const char	*g_err_table[8] =
 {
-	0,
 	"invalid option, see usage with -h.",
 	"missing arguments, see usage with -h.",
 	"too much arguments, see usage with -h.",
 	"unknown mode, see usage with -h.",
 	"invalid block size, can only be >= 1 and <= 16.",
-	"couldn't allocate memory."
+	"couldn't allocate memory.",
+	"invalid input, the program only accept valid hexadecimal character.",
+	"invalid input, the program can only accept valid ASCII character."
 };
 
-void	print_err(const char *pgrname, const char *msg)
+static char	*g_pgrname = NULL;
+
+static void	print_err(const char *msg)
 {
-	if (pgrname != NULL)
-	{
-		ft_putstr_fd(pgrname, 2);
-		ft_putstr_fd(": ", 2);
-	}
+	ft_putstr_fd(g_pgrname, 2);
+	ft_putstr_fd(": ", 2);
 	ft_putendl_fd(msg, 2);
 }
 
-void	exit_with_err(const char *pgrname, int err_code)
+void	exit_with_err(int err_code)
 {
-	print_err(pgrname, g_err_table[err_code]);
+	print_err(g_err_table[err_code]);
 	exit(err_code);
 }
 
-char	*proceed_mode(char *pgrname, char *mode, char *block_size, char *input)
+char	*proceed_mode(char *mode, char *block_size, char *input)
 {
 	char			*ret;
 	int				fmode;
@@ -73,10 +74,10 @@ char	*proceed_mode(char *pgrname, char *mode, char *block_size, char *input)
 	else if (ft_strcmp(mode, "IN_BLOCK") == 0)
 		fmode = IN_BLOCK;
 	else
-		exit_with_err(pgrname, UNKN_MODE_ERRC);
+		exit_with_err(UNKN_MODE_ERRC);
 	iblock_size = ft_atoi(block_size);
 	if (!(iblock_size >= 1 && iblock_size <= 16))
-		exit_with_err(pgrname, INVALID_BLOCK_SIZE_ERRC);
+		exit_with_err(INVALID_BLOCK_SIZE_ERRC);
 	ret = strtohex(input, fmode, iblock_size);
 	return (ret);
 }
@@ -93,20 +94,14 @@ char	*proceed(int argc, char **argv)
 		else if (ft_strcmp(argv[1], "-x") == 0)
 			ret = strtohex(argv[2], NO_SPACE, 0);
 		else
-			exit_with_err(argv[0], INVALID_OPTION_ERRC);
+			exit_with_err(INVALID_OPTION_ERRC);
 	}
 	else if (argc == 6)
 	{
 		if (ft_strcmp(argv[1], "-x") != 0 || ft_strcmp(argv[2], "-m") != 0)
-			exit_with_err(argv[0], INVALID_OPTION_ERRC);
-		ret = proceed_mode(argv[0], argv[3], argv[4], argv[5]);
+			exit_with_err(INVALID_OPTION_ERRC);
+		ret = proceed_mode(argv[3], argv[4], argv[5]);
 	}
-	else if (argc < 3)
-		exit_with_err(argv[0], MISS_ARG_ERRC);
-	else if (argc > 6)
-		exit_with_err(argv[0], TOOM_ARG_ERRC);
-	if (!ret)
-		exit_with_err(argv[0], ALLOCATION_ERROR_ERRC);
 	return (ret);
 }
 
@@ -114,15 +109,24 @@ int main(int argc, char **argv)
 {
 	char	*str;
 
-	argv[0] += 2;
-	if (argc == 2 && ft_strcmp(argv[1], "-h") == 0)
-		ft_putstr(g_usage);
-	else if (argc >= 3 && argc <= 6)
+	g_pgrname = argv[0] += 2;
+	str = NULL;
+	if (argc == 2)
+	{
+		if(ft_strcmp(argv[1], "-h") == 0)
+			ft_putstr(g_usage);
+		else
+			exit_with_err(INVALID_OPTION_ERRC);
+	}
+	else if (argc == 3 || argc == 6)
 	{
 		str = proceed(argc, argv);
 		ft_putendl(str);
 	}
-	else
-		exit_with_err(argv[0], INVALID_OPTION_ERRC);
+	else if (argc < 3 || (argc > 3 && argc < 6))
+		exit_with_err(MISS_ARG_ERRC);
+	else if (argc > 6)
+		exit_with_err(TOOM_ARG_ERRC);
+	free(str);
 	return (0);
 }

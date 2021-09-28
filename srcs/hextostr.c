@@ -6,13 +6,13 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/22 13:32:20 by plouvel           #+#    #+#             */
-/*   Updated: 2021/09/24 15:48:48 by plouvel          ###   ########.fr       */
+/*   Updated: 2021/09/28 20:05:56 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include "hextxt.h"
 #include <stdlib.h>
-#include <stdio.h>
 
 static bool	valid_hex(unsigned char c)
 {
@@ -74,10 +74,10 @@ char	*hextostr(const char *pstr)
 	size_conv = check_str(pstr);
 	i = 0;
 	if(!size_conv)
-		return (NULL);
+		exit_with_err(INVALID_INPUT_HEX);
 	conv = (char *) malloc((size_conv + 1) * sizeof(char));
 	if (!conv)
-		return (NULL);
+		exit_with_err(0);
 	while (*pstr != '\0')
 	{
 		if (valid_hex(*pstr))

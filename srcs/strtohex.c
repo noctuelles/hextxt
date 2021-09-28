@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 10:50:30 by plouvel           #+#    #+#             */
-/*   Updated: 2021/09/24 15:44:43 by plouvel          ###   ########.fr       */
+/*   Updated: 2021/09/28 20:03:25 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,6 @@ static size_t	check_str(const char *pstr, int mode, unsigned int blk_size)
 
 	size = 0;
 	limit = 2147483647;
-	if (blk_size > limit)
-		return (0);
 	while (*pstr != '\0' && limit--)
 	{
 		if (!ft_isascii(*pstr))
@@ -54,10 +52,10 @@ char	*strtohex(const char *pstr, int mode, unsigned int blk_size)
 
 	size = check_str(pstr, mode, blk_size);
 	if (!size)
-		return (NULL);
+		exit_with_err(INVALID_INPUT_STR);
 	str = (char *) malloc((size + 1) * sizeof(char));
 	if (!str)
-		return (NULL);
+		exit_with_err(ALLOCATION_ERROR_ERRC);
 	i = 0;
 	char_c = 0;
 	while (*pstr != '\0')
