@@ -14,7 +14,7 @@ RM		=	rm -rf
 	${CC} ${CFLAGS} -I ./includes -c $< -o ${<:.c=.o}
 
 $(NAME): 	$(OBJS)
-	${CC} ${CFLAGS} ${OBJS} -L . -l ft -o ${NAME}  
+	${CC} ${CFLAGS} ${OBJS} -L . -l ft -o ${NAME} -g3 -fsanitize=address  
 
 all:		${NAME}
 

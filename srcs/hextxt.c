@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/22 13:22:05 by plouvel           #+#    #+#             */
-/*   Updated: 2021/09/28 20:19:11 by plouvel          ###   ########.fr       */
+/*   Updated: 2021/09/29 17:27:20 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	exit_with_err(int err_code)
 	exit(err_code);
 }
 
-char	*proceed_mode(char *mode, char *block_size, char *input)
+char	*proceed_mode(int argc, char *mode, char *block_size, char *input)
 {
 	char			*ret;
 	int				fmode;
@@ -75,9 +75,14 @@ char	*proceed_mode(char *mode, char *block_size, char *input)
 		fmode = IN_BLOCK;
 	else
 		exit_with_err(UNKN_MODE_ERRC);
-	iblock_size = ft_atoi(block_size);
-	if (!(iblock_size >= 1 && iblock_size <= 16))
-		exit_with_err(INVALID_BLOCK_SIZE_ERRC);
+	if (argc == 6 && (fmode == SPACE_EACH || fmode == NO_SPACE))
+		exit_with_err(TOOM_ARG_ERRC);
+	if (fmode == IN_BLOCK)
+	{
+		iblock_size = ft_atoi(block_size);
+		if (!(iblock_size >= 1 && iblock_size <= 16))
+			exit_with_err(INVALID_BLOCK_SIZE_ERRC);
+	}
 	ret = strtohex(input, fmode, iblock_size);
 	return (ret);
 }
@@ -96,11 +101,11 @@ char	*proceed(int argc, char **argv)
 		else
 			exit_with_err(INVALID_OPTION_ERRC);
 	}
-	else if (argc == 6)
+	else if (argc == 5 || argc == 6)
 	{
 		if (ft_strcmp(argv[1], "-x") != 0 || ft_strcmp(argv[2], "-m") != 0)
 			exit_with_err(INVALID_OPTION_ERRC);
-		ret = proceed_mode(argv[3], argv[4], argv[5]);
+		ret = proceed_mode(argc, argv[3], argv[4], argv[argc - 1]);
 	}
 	return (ret);
 }
@@ -118,12 +123,12 @@ int main(int argc, char **argv)
 		else
 			exit_with_err(INVALID_OPTION_ERRC);
 	}
-	else if (argc == 3 || argc == 6)
+	else if (argc == 3 || argc == 5 || argc == 6)
 	{
 		str = proceed(argc, argv);
 		ft_putendl(str);
 	}
-	else if (argc < 3 || (argc > 3 && argc < 6))
+	else if (argc < 3)
 		exit_with_err(MISS_ARG_ERRC);
 	else if (argc > 6)
 		exit_with_err(TOOM_ARG_ERRC);
