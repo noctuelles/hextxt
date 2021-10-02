@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 10:50:30 by plouvel           #+#    #+#             */
-/*   Updated: 2021/10/02 21:24:27 by plouvel          ###   ########.fr       */
+/*   Updated: 2021/10/02 21:27:17 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static size_t	check_str(const char *pstr, int mode, unsigned int blk_size)
 		size += size / 2 - 1;
 	else if (mode == IN_BLOCK)
 	{
-		if((size / 2) %  blk_size == 0)
+		if ((size / 2) % blk_size == 0)
 			size = size + ((size / 2) / blk_size) - 1;
 		else
 			size = size + ((size / 2) / blk_size);
@@ -68,7 +68,7 @@ char	*strtohex(const char *pstr, int mode, unsigned int blk_size)
 		str[i++] = itoch(*pstr++ % 16);
 		char_c += 2;
 		if (mode == SPACE_EACH
-				|| (mode == IN_BLOCK && char_c % (blk_size * 2) == 0))
+			|| (mode == IN_BLOCK && char_c % (blk_size * 2) == 0))
 			if (i + 1 < size)
 				str[i++] = ' ';
 	}

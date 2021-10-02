@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/22 13:22:05 by plouvel           #+#    #+#             */
-/*   Updated: 2021/09/29 18:27:56 by plouvel          ###   ########.fr       */
+/*   Updated: 2021/10/02 21:30:22 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static const char	*g_err_table[9] =
 	"invalid input, the program can only accept valid ASCII character."
 };
 
-static char	*g_pgrname = NULL;
+static char			*g_pgrname = NULL;
 
 static void	print_err(const char *msg)
 {
@@ -110,7 +110,7 @@ char	*proceed(int argc, char **argv)
 	return (ret);
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	char	*str;
 
@@ -118,7 +118,7 @@ int main(int argc, char **argv)
 	str = NULL;
 	if (argc == 2)
 	{
-		if(ft_strcmp(argv[1], "-h") == 0)
+		if (ft_strcmp(argv[1], "-h") == 0)
 			ft_putstr(g_usage);
 		else
 			exit_with_err(INVALID_OPTION_ERRC);

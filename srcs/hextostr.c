@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/22 13:32:20 by plouvel           #+#    #+#             */
-/*   Updated: 2021/09/28 20:05:56 by plouvel          ###   ########.fr       */
+/*   Updated: 2021/10/02 21:31:23 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 static bool	valid_hex(unsigned char c)
 {
 	if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f')
-			|| (c >= 'A' && c <= 'F'))
+		|| (c >= 'A' && c <= 'F'))
 		return (true);
 	return (false);
 }
@@ -73,7 +73,7 @@ char	*hextostr(const char *pstr)
 
 	size_conv = check_str(pstr);
 	i = 0;
-	if(!size_conv)
+	if (!size_conv)
 		exit_with_err(INVALID_INPUT_HEX);
 	conv = (char *) malloc((size_conv + 1) * sizeof(char));
 	if (!conv)
