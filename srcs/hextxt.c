@@ -6,7 +6,7 @@
 /*   By: plouvel <plouvel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/22 13:22:05 by plouvel           #+#    #+#             */
-/*   Updated: 2021/09/29 17:27:20 by plouvel          ###   ########.fr       */
+/*   Updated: 2021/09/29 18:27:56 by plouvel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 #include "hextxt.h"
 #include <stdlib.h>
 #include <libgen.h>
-#include <stdio.h>
 
 static const char	g_usage[620] =
 	"hextxt: ASCII string <-> hexadecimal conversion\n"
@@ -32,8 +31,9 @@ static const char	g_usage[620] =
 	"If only the input is provided, it converts the string to hex-\n"
 	"-adecimal using NO_SPACE mode.\n";
 
-static const char	*g_err_table[8] =
+static const char	*g_err_table[9] =
 {
+	NULL,
 	"invalid option, see usage with -h.",
 	"missing arguments, see usage with -h.",
 	"too much arguments, see usage with -h.",
@@ -114,7 +114,7 @@ int main(int argc, char **argv)
 {
 	char	*str;
 
-	g_pgrname = argv[0] += 2;
+	g_pgrname = basename(argv[0]);
 	str = NULL;
 	if (argc == 2)
 	{
